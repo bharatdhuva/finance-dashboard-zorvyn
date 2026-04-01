@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { TrendingUp, TrendingDown, Wallet, PiggyBank } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Area, AreaChart } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Area, AreaChart, Sector } from 'recharts';
 import { useStore } from '@/store/useStore';
 import { formatINR, CATEGORY_COLORS } from '@/lib/format';
 import { SkeletonBox } from '@/components/Skeleton';
@@ -8,6 +8,7 @@ import { SkeletonBox } from '@/components/Skeleton';
 export default function DashboardPage() {
   const { transactions } = useStore();
   const [loading, setLoading] = useState(true);
+  const [hoveredCategoryIndex, setHoveredCategoryIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 500);
@@ -24,6 +25,14 @@ export default function DashboardPage() {
 
   const monthlyData = useMemo(() => {
     const months = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const seededBalances: Record<string, number> = {
+      Jul: 35000,
+      Aug: 52000,
+      Sep: 68000,
+    };
+
+    let runningBalance = 0;
+
     return months.map((m, i) => {
       const monthNum = i + 7;
       const monthTxns = transactions.filter(t => {
@@ -32,7 +41,15 @@ export default function DashboardPage() {
       });
       const income = monthTxns.filter(t => t.type === 'Income').reduce((s, t) => s + t.amount, 0);
       const expense = monthTxns.filter(t => t.type === 'Expense').reduce((s, t) => s + t.amount, 0);
-      return { month: m, balance: income - expense, income, expense };
+      const monthlyNet = income - expense;
+
+      if (m in seededBalances) {
+        runningBalance = seededBalances[m];
+      } else {
+        runningBalance += monthlyNet;
+      }
+
+      return { month: m, balance: runningBalance, income, expense };
     });
   }, [transactions]);
 
@@ -46,6 +63,10 @@ export default function DashboardPage() {
       name, value, percent: total > 0 ? (value / total * 100).toFixed(1) : '0',
     }));
   }, [transactions]);
+
+  const handleCategorySliceHover = (_: unknown, index: number) => {
+    setHoveredCategoryIndex(index);
+  };
 
   const noData = transactions.length === 0;
   const neutral = noData;
@@ -116,9 +137,25 @@ export default function DashboardPage() {
                 <div className="flex flex-col items-center">
                   <ResponsiveContainer width="100%" height={180}>
                     <PieChart>
-                      <Pie data={categoryData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={3} dataKey="value">
-                        {categoryData.map((entry) => (
-                          <Cell key={entry.name} fill={CATEGORY_COLORS[entry.name] || '#94A3B8'} />
+                      <Pie
+                        data={categoryData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={75}
+                        paddingAngle={3}
+                        dataKey="value"
+                        activeIndex={hoveredCategoryIndex ?? undefined}
+                        activeShape={renderActiveCategoryShape}
+                        onMouseEnter={handleCategorySliceHover}
+                        onMouseLeave={() => setHoveredCategoryIndex(null)}
+                      >
+                        {categoryData.map((entry, index) => (
+                          <Cell
+                            key={entry.name}
+                            fill={CATEGORY_COLORS[entry.name] || '#94A3B8'}
+                            opacity={hoveredCategoryIndex !== null && hoveredCategoryIndex !== index ? 0.6 : 1}
+                          />
                         ))}
                       </Pie>
                       <Tooltip content={<CustomTooltip />} />
@@ -140,6 +177,33 @@ export default function DashboardPage() {
         )}
       </div>
     </div>
+  );
+}
+
+function renderActiveCategoryShape(props: any) {
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
+
+  return (
+    <g>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius + 12}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+      />
+      <text x={cx} y={cy - 8} textAnchor="middle" className="fill-foreground text-[12px] font-bold">
+        {payload?.name}
+      </text>
+      <text x={cx} y={cy + 10} textAnchor="middle" className="fill-foreground text-[11px] font-semibold">
+        {formatINR(payload?.value ?? 0)}
+      </text>
+      <text x={cx} y={cy + 26} textAnchor="middle" className="fill-muted-foreground text-[10px] font-medium">
+        {payload?.percent}% of total
+      </text>
+    </g>
   );
 }
 

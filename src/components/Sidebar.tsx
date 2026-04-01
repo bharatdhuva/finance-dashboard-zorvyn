@@ -11,32 +11,48 @@ const navItems = [
 export function Sidebar({ mobileOpen, onMobileClose }: { mobileOpen: boolean; onMobileClose: () => void }) {
   const { activePage, setActivePage, selectedRole, setRole, darkMode, setDarkMode } = useStore();
   const [roleOpen, setRoleOpen] = useState(false);
+  const [iconAnimationTick, setIconAnimationTick] = useState<Record<string, number>>({});
+
+  const handleNavClick = (id: string) => {
+    setIconAnimationTick((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
+    setActivePage(id);
+    onMobileClose();
+  };
 
   const content = (
     <div className="flex flex-col h-full bg-card border-r border-border">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-border">
+      <button
+        onClick={() => { setActivePage('dashboard'); onMobileClose(); }}
+        className="flex items-center gap-3 px-5 py-5 border-b border-border text-left transition-colors hover:bg-muted/40"
+      >
         <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
           <Shield size={20} className="text-primary-foreground" />
         </div>
         <span className="text-lg font-bold text-foreground tracking-tight">Zorvyn Finance</span>
-      </div>
+      </button>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1">
         {navItems.map((item) => {
           const active = activePage === item.id;
+          const hasAnimated = (iconAnimationTick[item.id] ?? 0) > 0;
           return (
             <button
               key={item.id}
-              onClick={() => { setActivePage(item.id); onMobileClose(); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              onClick={() => handleNavClick(item.id)}
+              className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 active
                   ? 'bg-primary/10 text-primary'
                   : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
             >
-              <item.icon size={18} />
+              <span
+                key={`${item.id}-${iconAnimationTick[item.id] ?? 0}`}
+                className={hasAnimated ? 'inline-flex animate-nav-icon-pop' : 'inline-flex'}
+              >
+                <item.icon size={18} />
+              </span>
               <span>{item.label}</span>
             </button>
           );
