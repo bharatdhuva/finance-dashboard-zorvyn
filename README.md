@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Zorvyn Finance Dashboard</h1>
-  <p><strong>Clean • Modern • Role-Based</strong> Finance Dashboard</p>
+  <p><strong>Clean � Modern � Role-Based</strong> Finance Dashboard</p>
 
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
   <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
@@ -13,61 +13,32 @@
 
 ## About the Project
 
-**Zorvyn Finance Dashboard** is a clean, interactive, and fully responsive frontend-only finance dashboard built for the **Finance Dashboard UI assignment**.
+Zorvyn Finance Dashboard is a frontend-only finance dashboard built for the Finance Dashboard UI assignment.
 
-It gives a complete view of financial activity through summary cards, transaction management, spending insights, and role-based UI behavior.
-
-No backend or authentication server is used. Everything is handled on the frontend with mock data and persisted local state.
+It focuses on clean UI, role-based interactions (Admin/Viewer), and clear financial insights using mock data.
 
 ---
 
 ## Key Features
 
-### 1. Dashboard Overview
-- Four summary cards: **Total Balance**, **Total Income**, **Total Expenses**, **Savings Rate**
-- **Monthly spending trend** graph
-- **Expense composition** donut chart with category breakdown
-- **Weekly Expense Tracker** section
-
-### 2. Transactions Ledger
-- Complete transaction table with **Date, Description, Category, Type, Amount**
-- Search by description or category
-- Filter by Income / Expense
-- Sort by Date and Amount
-- **Admin-only** actions: Add, Edit, Delete transactions
-- CSV export for filtered transactions
-- Beautiful empty state handling
-
-### 3. Insights & Analysis
-- Highest spending category
-- Lowest spending category
-- Month-over-Month expense comparison
-- Top income source
-- Monthly inflow vs outflow bar chart
-
-### 4. Role-Based UI
-- **Viewer Mode**: Read-only access
-- **Admin Mode**: Full transaction actions (Add, Edit, Delete, Bulk Delete)
-- Role switching via sidebar dropdown with instant UI updates
-
-### Additional Highlights
-- Fully responsive design for desktop and mobile
-- Dark / Light mode with persistence
-- Custom toast notifications
-- Loading skeletons
-- Data persistence using localStorage
-- Floating Action Button for Admin add action
+- Summary cards: Balance, Income, Expense, Savings Rate
+- Monthly Spending Graph + Weekly Expense Tracker
+- Expense composition donut chart
+- Transactions table with search, filter, sort, CSV export
+- Admin actions: Add, Edit, Delete, Bulk Delete
+- Analysis: top/lowest spend, MoM comparison, top income source
+- Dark mode, responsive design, skeleton loaders, toast notifications
+- Zustand + localStorage persistence
 
 ---
 
 ## Tech Stack
 
-- **Framework**: React 18 + Vite
-- **Styling**: Tailwind CSS
-- **State Management**: Zustand with persist middleware
-- **Charts**: Recharts
-- **Icons**: Lucide React
-- **Data**: Mock seeded records
+- React 18 + Vite
+- Tailwind CSS
+- Zustand (persist middleware)
+- Recharts
+- Lucide React
 
 ---
 
@@ -78,7 +49,7 @@ npm install
 npm run dev
 ```
 
-If the default Vite port is already in use, it automatically switches to the next available port.
+If default port is busy, Vite auto-switches to another port.
 
 ---
 
@@ -93,9 +64,7 @@ npm run test
 
 ## View Live Deployment
 
-[![View Live Deployment](https://img.shields.io/badge/View-Live%20Deployment-22c55e?style=for-the-badge)](YOUR_VERCEL_LINK_HERE)
-
-> Replace `YOUR_VERCEL_LINK_HERE` with your actual Vercel deployment URL.
+[![View Live Deployment](https://img.shields.io/badge/View-Live%20Deployment-22c55e?style=for-the-badge)](https://finance-dashboard-zorvyn-6dqp.vercel.app/)
 
 ---
 
@@ -107,67 +76,24 @@ npm run test
 
 ## Assignment Requirements Coverage
 
-| Requirement | Status |
-|---|---|
-| Summary Cards | ✅ Done |
-| Time-based visualization | ✅ Done |
-| Categorical visualization | ✅ Done |
-| Transactions with search/filter/sort | ✅ Done |
-| Role-based UI (Admin/Viewer) | ✅ Done |
-| Insights section | ✅ Done |
-| State management | ✅ Done |
-| Responsive design | ✅ Done |
-| Empty state handling | ✅ Done |
-| Dark mode + localStorage | ✅ Done |
-| CSV Export | ✅ Done |
-| Animations / transitions | ✅ Done |
+| Requirement                                 | Status |
+|---------------------------------------------|--------|
+| Summary Cards + Time-based Charts           | ✅ Done |
+| Categorical Visualization (Donut Chart)     | ✅ Done |
+| Transactions (Search, Filter, Sort)         | ✅ Done |
+| Role-based UI (Admin / Viewer)              | ✅ Done |
+| Insights Section                            | ✅ Done |
+| State Management with Persistence           | ✅ Done |
+| Fully Responsive Design                     | ✅ Done |
+| CSV Export + Custom Toast                   | ✅ Done |
 
-**Bonus implemented:** Weekly Expense Tracker, custom toast notifications, floating add button for Admin mode.
+## Final Note
 
----
+While I leveraged AI tools to speed up development and improve quality, I have complete ownership and deep understanding of every component, logic, and design decision in this project.
+From role-based access to custom toasts and edge-case handling, I can explain and modify any part of this codebase confidently.
 
-## Project Structure
+Also booking my tickets to **Zorvyn** Frontend Intern. Hope so.😁
 
-```text
-finance-dashboard-zorvyn/
-├── src/
-│   ├── components/   # Layout, navbar, sidebar, modal, reusable UI primitives
-│   ├── pages/        # Dashboard, Transactions, Analysis, NotFound
-│   ├── store/        # Zustand store (transactions, filters, role, theme)
-│   ├── lib/          # Formatting and utility helpers
-│   ├── hooks/        # Custom hooks
-│   └── test/         # Vitest setup and tests
-├── public/
-├── index.html
-├── tailwind.config.js
-├── vite.config.js
-└── README.md
-```
-
----
-
-## What This Project Demonstrates
-
-- UI design quality and visual hierarchy
-- Component structure and reusability
-- State management with Zustand
-- Role-based UI simulation (Admin / Viewer)
-- Responsive design across screen sizes
-- Thoughtful interactions and polished frontend UX
-
----
-
-## Note for Evaluators
-
-This dashboard was built using **React + modern frontend tooling** to demonstrate component reusability, scalable architecture, and efficient state handling.
-
-I am also comfortable building similar interfaces with vanilla JavaScript, CSS, and DOM APIs if required.
-
----
-
-## Assumptions
-
-- All data is mock/seeded for assignment demonstration.
-- No backend or real authentication is implemented.
-- Role switching is simulated entirely on the frontend.
-- CSV export downloads the currently visible filtered transactions.
+Thank you for your time and consideration.
+**Bharat**  
+React Developer Intern Candidate
