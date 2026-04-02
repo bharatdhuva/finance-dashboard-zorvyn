@@ -100,24 +100,9 @@ npm run test
 
 ## Demo Preview
 
-Add your demo GIF here before final submission:
-
-```text
-./assets/zorvyn-demo.gif
-```
-
-If you want to embed it directly in GitHub README, use:
-
-```markdown
 ![Zorvyn Finance Dashboard Demo](./assets/zorvyn-demo.gif)
-```
 
-You can also add separate screenshots below the GIF if needed:
-
-- Financial Overview
-- Transactions Ledger (Admin Mode)
-- Analysis / Insights Page
-- Mobile Responsive View
+> Place the GIF file at `./assets/zorvyn-demo.gif`.
 
 ---
 
