@@ -15,6 +15,15 @@ export default function Layout() {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
+  useEffect(() => {
+    const titles = {
+      dashboard: 'Finance Dashboard',
+      transactions: 'Transactions Ledger',
+      analysis: 'Spending Analysis',
+    };
+    document.title = titles[activePage] || 'Zorvyn Finance Dashboard';
+  }, [activePage]);
+
   const renderPage = () => {
     switch (activePage) {
       case 'transactions': return <TransactionsPage />;

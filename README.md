@@ -91,18 +91,11 @@ npm run test
 
 ---
 
-## Live Demo
+## View Live Deployment
 
-- Live Demo: _add your Vercel deployment link here_
-- Repository: _add your repo link here_
+[![View Live Deployment](https://img.shields.io/badge/View-Live%20Deployment-22c55e?style=for-the-badge)](YOUR_VERCEL_LINK_HERE)
 
----
-
-## Demo Preview
-
-![Zorvyn Finance Dashboard Demo](./assets/zorvyn-demo.gif)
-
-> Place the GIF file at `./assets/zorvyn-demo.gif`.
+> Replace `YOUR_VERCEL_LINK_HERE` with your actual Vercel deployment URL.
 
 ---
 
