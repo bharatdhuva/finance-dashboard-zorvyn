@@ -24,12 +24,21 @@ export default function DashboardPage() {
   }, [transactions]);
 
   const monthlyData = useMemo(() => {
-    const months = [
-      { label: 'Dec', month: 12, year: 2025 },
-      { label: 'Jan', month: 1, year: 2026 },
-      { label: 'Feb', month: 2, year: 2026 },
-      { label: 'Mar', month: 3, year: 2026 },
-    ];
+    const latest = transactions.length > 0
+      ? transactions.reduce((max, tx) => {
+        const d = new Date(tx.date);
+        return d > max ? d : max;
+      }, new Date(transactions[0].date))
+      : new Date();
+
+    const months = Array.from({ length: 4 }).map((_, idx) => {
+      const d = new Date(latest.getFullYear(), latest.getMonth() - (3 - idx), 1);
+      return {
+        label: d.toLocaleString('en-US', { month: 'short' }),
+        month: d.getMonth() + 1,
+        year: d.getFullYear(),
+      };
+    });
 
     return months.map(({ label, month, year }) => {
       const monthTxns = transactions.filter(t => {

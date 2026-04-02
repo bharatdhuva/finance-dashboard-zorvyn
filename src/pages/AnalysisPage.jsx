@@ -4,6 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } fro
 import { useStore } from '@/store/useStore';
 import { formatINR, CATEGORY_COLORS } from '@/lib/format';
 
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 export default function AnalysisPage() {
   const { transactions } = useStore();
 
@@ -28,8 +30,21 @@ export default function AnalysisPage() {
   const lowest = categoryTotals[categoryTotals.length - 1];
   const topIncome = incomeCategoryTotals[0];
 
-  // Month over month
+  // Dynamically determine the latest month from data, then compare with previous
   const mom = useMemo(() => {
+    if (transactions.length === 0) return { current: 0, previous: 0, change: 0, currentLabel: '', previousLabel: '' };
+
+    const latestDate = transactions.reduce((max, tx) => {
+      const d = new Date(tx.date);
+      return d > max ? d : max;
+    }, new Date(transactions[0].date));
+
+    const currentMonth = latestDate.getMonth() + 1;
+    const currentYear = latestDate.getFullYear();
+
+    const previousMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const previousYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+
     const getMonthExpenses = (m, y) => expenses
       .filter(t => {
         const d = new Date(t.date);
@@ -37,21 +52,33 @@ export default function AnalysisPage() {
       })
       .reduce((s, t) => s + t.amount, 0);
 
-    const current = getMonthExpenses(3, 2026);
-    const previous = getMonthExpenses(2, 2026);
+    const current = getMonthExpenses(currentMonth, currentYear);
+    const previous = getMonthExpenses(previousMonth, previousYear);
     const change = previous > 0 ? ((current - previous) / previous * 100) : 0;
-    return { current, previous, change };
-  }, [expenses]);
 
+    return {
+      current,
+      previous,
+      change,
+      currentLabel: `${MONTH_NAMES[currentMonth - 1]} ${currentYear}`,
+      previousLabel: `${MONTH_NAMES[previousMonth - 1]} ${previousYear}`,
+    };
+  }, [transactions, expenses]);
+
+  // Dynamically build last 6 months from the latest transaction date
   const monthlyChart = useMemo(() => {
-    const months = [
-      { label: 'Oct', month: 10, year: 2025 },
-      { label: 'Nov', month: 11, year: 2025 },
-      { label: 'Dec', month: 12, year: 2025 },
-      { label: 'Jan', month: 1, year: 2026 },
-      { label: 'Feb', month: 2, year: 2026 },
-      { label: 'Mar', month: 3, year: 2026 },
-    ];
+    if (transactions.length === 0) return [];
+
+    const latestDate = transactions.reduce((max, tx) => {
+      const d = new Date(tx.date);
+      return d > max ? d : max;
+    }, new Date(transactions[0].date));
+
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(latestDate.getFullYear(), latestDate.getMonth() - i, 1);
+      months.push({ label: MONTH_NAMES[d.getMonth()], month: d.getMonth() + 1, year: d.getFullYear() });
+    }
 
     return months.map(({ label, month, year }) => {
       const txns = transactions.filter(t => {
@@ -68,10 +95,13 @@ export default function AnalysisPage() {
 
   const topExpenseCategories = categoryTotals.slice(0, 2).map(c => c[0]).join(' and ');
   const momText = mom.change > 0
-    ? `Your spending increased by ${Math.abs(mom.change).toFixed(0)}% compared to last month.`
+    ? `Your spending increased by ${Math.abs(mom.change).toFixed(0)}% in ${mom.currentLabel} compared to ${mom.previousLabel}.`
     : mom.change < 0
-    ? `Your spending decreased by ${Math.abs(mom.change).toFixed(0)}% compared to last month.`
+    ? `Your spending decreased by ${Math.abs(mom.change).toFixed(0)}% in ${mom.currentLabel} compared to ${mom.previousLabel}.`
     : 'Your spending remained the same as last month.';
+
+  const avgTxnSize = expenses.length > 0 ? totalExpense / expenses.length : 0;
+  const totalTxnCount = transactions.length;
 
   const analysisCards = [
     {
@@ -161,10 +191,27 @@ export default function AnalysisPage() {
         )}
       </div>
 
+      {/* Additional Insight Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
+          <p className="text-xs text-muted-foreground font-medium mb-1">Total Transactions</p>
+          <p className="text-2xl font-bold text-foreground">{totalTxnCount}</p>
+        </div>
+        <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
+          <p className="text-xs text-muted-foreground font-medium mb-1">Avg. Expense Size</p>
+          <p className="text-2xl font-bold text-foreground">{formatINR(avgTxnSize)}</p>
+        </div>
+        <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
+          <p className="text-xs text-muted-foreground font-medium mb-1">Expense Categories</p>
+          <p className="text-2xl font-bold text-foreground">{categoryTotals.length}</p>
+        </div>
+      </div>
+
       {/* Summary */}
       <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
         <p className="text-sm text-muted-foreground leading-relaxed">
           {momText} {topExpenseCategories && `${topExpenseCategories} are your top expense categories.`}
+          {avgTxnSize > 0 && ` Average expense transaction is ${formatINR(avgTxnSize)}.`}
         </p>
       </div>
     </div>
