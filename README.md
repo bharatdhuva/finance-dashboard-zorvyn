@@ -99,6 +99,12 @@ npm run test
 
 ---
 
+## Demo Preview
+
+![Zorvyn Finance Dashboard Demo](./assets/Demo-Zorvyn-GIF.gif)
+
+---
+
 ## Assignment Requirements Coverage
 
 | Requirement | Status |
