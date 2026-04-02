@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, Plus, Pencil, Trash2, Download, ArrowUpDown, PackageOpen } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { formatINR, CATEGORY_BG_CLASSES } from '@/lib/format';
@@ -11,6 +11,8 @@ export default function TransactionsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editTx, setEditTx] = useState(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const selectAllRef = useRef(null);
   const isAdmin = selectedRole === 'admin';
 
   const toIsoDate = (value) => {
@@ -39,16 +41,34 @@ export default function TransactionsPage() {
     return result;
   }, [transactions, filters]);
 
+  const filteredIds = useMemo(() => filtered.map((tx) => tx.id), [filtered]);
+  const selectedCount = selectedIds.length;
+  const allFilteredSelected = filteredIds.length > 0 && filteredIds.every((id) => selectedIds.includes(id));
+  const someFilteredSelected = filteredIds.some((id) => selectedIds.includes(id));
+
+  useEffect(() => {
+    setSelectedIds((current) => current.filter((id) => filteredIds.includes(id)));
+  }, [filteredIds]);
+
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = someFilteredSelected && !allFilteredSelected;
+    }
+  }, [someFilteredSelected, allFilteredSelected]);
+
   const handleExportCSV = () => {
     const header = 'Date,Description,Category,Type,Amount\n';
     const rows = filtered
-      .map((t) => [
-        csvCell(toIsoDate(t.date)),
+      .map((t) => {
+        const excelDateText = `="${toIsoDate(t.date)}"`;
+        return [
+          excelDateText,
         csvCell(t.description),
         csvCell(t.category),
         csvCell(t.type),
         csvCell(t.amount),
-      ].join(','))
+        ].join(',');
+      })
       .join('\n');
     const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -63,7 +83,30 @@ export default function TransactionsPage() {
   const handleDelete = (id) => {
     deleteTransaction(id);
     setConfirmDeleteId(null);
+    setSelectedIds((current) => current.filter((selectedId) => selectedId !== id));
     showToast('Transaction deleted', 'error');
+  };
+
+  const toggleSelectAll = () => {
+    setSelectedIds((current) => {
+      if (allFilteredSelected) {
+        return current.filter((id) => !filteredIds.includes(id));
+      }
+      return [...new Set([...current, ...filteredIds])];
+    });
+  };
+
+  const toggleSelectTransaction = (id) => {
+    setSelectedIds((current) =>
+      current.includes(id) ? current.filter((selectedId) => selectedId !== id) : [...current, id]
+    );
+  };
+
+  const handleDeleteSelected = () => {
+    selectedIds.forEach((id) => deleteTransaction(id));
+    setSelectedIds([]);
+    setConfirmDeleteId(null);
+    showToast(`${selectedCount} transactions deleted`, 'error');
   };
 
   const toggleSort = (field) => {
@@ -100,6 +143,11 @@ export default function TransactionsPage() {
           </select>
         </div>
         <div className="flex gap-2">
+          {isAdmin && selectedCount > 0 && (
+            <button onClick={handleDeleteSelected} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-destructive text-destructive-foreground text-sm font-medium hover:opacity-90 transition-opacity">
+              <Trash2 size={14} /> Delete Selected ({selectedCount})
+            </button>
+          )}
           <button onClick={() => toggleSort('date')} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-card border border-border text-sm text-foreground hover:bg-muted transition-colors">
             <ArrowUpDown size={14} /> Date
           </button>
@@ -117,6 +165,18 @@ export default function TransactionsPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-left">
+              {isAdmin && (
+                <th className="px-4 py-3 font-medium text-muted-foreground">
+                  <input
+                    ref={selectAllRef}
+                    type="checkbox"
+                    checked={allFilteredSelected}
+                    onChange={toggleSelectAll}
+                    className="h-4 w-4 cursor-pointer rounded border-border text-primary focus:ring-ring"
+                    aria-label="Select all transactions"
+                  />
+                </th>
+              )}
               <th className="px-4 py-3 font-medium text-muted-foreground">Date</th>
               <th className="px-4 py-3 font-medium text-muted-foreground">Description</th>
               <th className="px-4 py-3 font-medium text-muted-foreground">Category</th>
@@ -128,7 +188,7 @@ export default function TransactionsPage() {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={isAdmin ? 6 : 5} className="py-16 text-center">
+                <td colSpan={isAdmin ? 7 : 5} className="py-16 text-center">
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <PackageOpen size={40} strokeWidth={1.5} />
                     <p className="text-sm font-medium">No matching transactions</p>
@@ -138,7 +198,18 @@ export default function TransactionsPage() {
               </tr>
             ) : (
               filtered.map((tx) => (
-                <tr key={tx.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+                <tr key={tx.id} className={`border-b border-border last:border-0 transition-colors ${selectedIds.includes(tx.id) ? 'bg-primary/5' : 'hover:bg-muted/30'}`}>
+                  {isAdmin && (
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(tx.id)}
+                        onChange={() => toggleSelectTransaction(tx.id)}
+                        className="h-4 w-4 cursor-pointer rounded border-border text-primary focus:ring-ring"
+                        aria-label={`Select transaction ${tx.description}`}
+                      />
+                    </td>
+                  )}
                   <td className="px-4 py-3 text-foreground whitespace-nowrap">{new Date(tx.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                   <td className="px-4 py-3 text-foreground">{tx.description}</td>
                   <td className="px-4 py-3">
@@ -181,13 +252,17 @@ export default function TransactionsPage() {
         </table>
       </div>
 
-      {/* FAB */}
       {isAdmin && (
         <button
-          onClick={() => { setEditTx(null); setModalOpen(true); }}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg glow-primary hover:scale-105 transition-transform z-40"
+          onClick={() => {
+            setEditTx(null);
+            setModalOpen(true);
+          }}
+          className="fixed bottom-8 right-8 z-50 flex h-[62px] w-[62px] items-center justify-center rounded-full bg-[#3B7EF6] text-white shadow-2xl transition-all duration-200 hover:bg-blue-700 hover:scale-110"
+          style={{ bottom: 'max(2rem, env(safe-area-inset-bottom))', right: 'max(2rem, env(safe-area-inset-right))' }}
+          aria-label="Add Transaction"
         >
-          <Plus size={24} />
+          <Plus size={28} strokeWidth={3} />
         </button>
       )}
 

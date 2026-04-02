@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { TrendingUp, TrendingDown, Wallet, PiggyBank } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Area, AreaChart, Sector } from 'recharts';
+import { XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Area, AreaChart, Sector, BarChart, Bar } from 'recharts';
 import { useStore } from '@/store/useStore';
 import { formatINR, CATEGORY_COLORS } from '@/lib/format';
 import { SkeletonBox } from '@/components/Skeleton';
@@ -25,20 +25,11 @@ export default function DashboardPage() {
 
   const monthlyData = useMemo(() => {
     const months = [
-      { label: 'Oct', month: 10, year: 2025 },
-      { label: 'Nov', month: 11, year: 2025 },
       { label: 'Dec', month: 12, year: 2025 },
       { label: 'Jan', month: 1, year: 2026 },
       { label: 'Feb', month: 2, year: 2026 },
       { label: 'Mar', month: 3, year: 2026 },
     ];
-    const seededBalances = {
-      Oct: 35000,
-      Nov: 52000,
-      Dec: 68000,
-    };
-
-    let runningBalance = 0;
 
     return months.map(({ label, month, year }) => {
       const monthTxns = transactions.filter(t => {
@@ -47,15 +38,8 @@ export default function DashboardPage() {
       });
       const income = monthTxns.filter(t => t.type === 'Income').reduce((s, t) => s + t.amount, 0);
       const expense = monthTxns.filter(t => t.type === 'Expense').reduce((s, t) => s + t.amount, 0);
-      const monthlyNet = income - expense;
 
-      if (label in seededBalances) {
-        runningBalance = seededBalances[label];
-      } else {
-        runningBalance += monthlyNet;
-      }
-
-      return { month: label, balance: runningBalance, income, expense };
+      return { month: label, income, expense };
     });
   }, [transactions]);
 
@@ -70,6 +54,60 @@ export default function DashboardPage() {
     }));
   }, [transactions]);
 
+  const weeklyExpenseData = useMemo(() => {
+    const expenseTx = transactions.filter((t) => t.type === 'Expense');
+    if (expenseTx.length === 0) return [];
+
+    const latestDate = expenseTx.reduce((max, tx) => {
+      const d = new Date(tx.date);
+      return d > max ? d : max;
+    }, new Date(expenseTx[0].date));
+
+    const startOfWeek = (date) => {
+      const d = new Date(date);
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    };
+
+    const referenceWeekStart = startOfWeek(latestDate);
+    const weeks = Array.from({ length: 6 }).map((_, idx) => {
+      const weekStart = new Date(referenceWeekStart);
+      weekStart.setDate(referenceWeekStart.getDate() - (5 - idx) * 7);
+
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      weekEnd.setHours(23, 59, 59, 999);
+
+      const expense = expenseTx
+        .filter((tx) => {
+          const d = new Date(tx.date);
+          return d >= weekStart && d <= weekEnd;
+        })
+        .reduce((sum, tx) => sum + tx.amount, 0);
+
+      const label = weekStart.toLocaleDateString('en-IN', { month: 'short', day: '2-digit' });
+
+      return {
+        week: label,
+        expense,
+      };
+    });
+
+    return weeks;
+  }, [transactions]);
+
+  const weeklySummary = useMemo(() => {
+    if (weeklyExpenseData.length === 0) return { latest: 0, average: 0, trend: 0 };
+    const latest = weeklyExpenseData[weeklyExpenseData.length - 1]?.expense ?? 0;
+    const previous = weeklyExpenseData[weeklyExpenseData.length - 2]?.expense ?? 0;
+    const average = weeklyExpenseData.reduce((sum, w) => sum + w.expense, 0) / weeklyExpenseData.length;
+    const trend = previous > 0 ? ((latest - previous) / previous) * 100 : 0;
+    return { latest, average, trend };
+  }, [weeklyExpenseData]);
+
   const handleCategorySliceHover = (_, index) => {
     setHoveredCategoryIndex(index);
   };
@@ -82,7 +120,7 @@ export default function DashboardPage() {
     { label: 'Total Income', value: formatINR(stats.income), icon: TrendingUp, trend: true, color: neutral ? 'text-muted-foreground' : 'text-success' },
     { label: 'Total Expenses', value: formatINR(stats.expense), icon: TrendingDown, trend: false, color: neutral ? 'text-muted-foreground' : 'text-destructive' },
     { label: 'Savings Rate', value: `${stats.savingsRate.toFixed(1)}%`, icon: PiggyBank, trend: !neutral && stats.savingsRate > 0, color: neutral ? 'text-muted-foreground' : 'text-accent' },
-  ];1
+  ];
 
   return (
     <div className="space-y-6">
@@ -111,24 +149,24 @@ export default function DashboardPage() {
           </>
         ) : (
           <>
-            {/* Balance Trend */}
+            {/* Spending Graph */}
             <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
-              <h3 className="text-sm font-semibold text-foreground mb-4">Net worth trajectory</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-4">Spending Graph</h3>
               {noData ? (
                 <div className="h-56 flex items-center justify-center text-muted-foreground text-sm">No data available</div>
               ) : (
                 <ResponsiveContainer width="100%" height={240}>
                   <AreaChart data={monthlyData}>
                     <defs>
-                      <linearGradient id="balGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(217,91%,60%)" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="hsl(217,91%,60%)" stopOpacity={0} />
+                      <linearGradient id="spendGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(0,84%,60%)" stopOpacity={0.32} />
+                        <stop offset="95%" stopColor="hsl(0,84%,60%)" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'hsl(215,20%,55%)', fontSize: 12 }} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fill: 'hsl(215,20%,55%)', fontSize: 12 }} tickFormatter={(v) => `₹${(v/1000).toFixed(0)}k`} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Area type="monotone" dataKey="balance" stroke="hsl(217,91%,60%)" fill="url(#balGrad)" strokeWidth={2.5} dot={false} />
+                    <Area type="monotone" dataKey="expense" name="Spending" stroke="hsl(0,84%,60%)" fill="url(#spendGrad)" strokeWidth={2.5} dot={false} />
                   </AreaChart>
                 </ResponsiveContainer>
               )}
@@ -182,6 +220,40 @@ export default function DashboardPage() {
           </>
         )}
       </div>
+
+      {/* Weekly Expense Tracker */}
+      {loading ? (
+        <SkeletonBox className="h-80" />
+      ) : (
+        <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">Weekly Expense Tracker</h3>
+              <p className="text-xs text-muted-foreground mt-1">Last 6 weeks spending trend for quick review</p>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="px-2.5 py-1 rounded-full bg-muted text-foreground">This Week: {formatINR(weeklySummary.latest)}</span>
+              <span className="px-2.5 py-1 rounded-full bg-muted text-foreground">Avg: {formatINR(weeklySummary.average)}</span>
+              <span className={`px-2.5 py-1 rounded-full ${weeklySummary.trend > 0 ? 'bg-destructive/10 text-destructive' : 'bg-success/10 text-success'}`}>
+                {weeklySummary.trend > 0 ? '+' : ''}{weeklySummary.trend.toFixed(1)}%
+              </span>
+            </div>
+          </div>
+
+          {weeklyExpenseData.length === 0 ? (
+            <div className="h-56 flex items-center justify-center text-muted-foreground text-sm">No weekly expense data available</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={weeklyExpenseData} barCategoryGap={24}>
+                <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fill: 'hsl(215,20%,55%)', fontSize: 12 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'hsl(215,20%,55%)', fontSize: 12 }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="expense" name="Weekly Expense" fill="hsl(217,91%,60%)" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+      )}
     </div>
   );
 }

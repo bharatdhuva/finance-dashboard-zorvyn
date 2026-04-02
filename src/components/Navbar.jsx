@@ -2,7 +2,7 @@ import { Sun, Moon, Menu } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 
 const pageNames = {
-  dashboard: 'Financial Overview',
+  dashboard: 'Finance Dashboard',
   transactions: 'Transactions Ledger',
   analysis: 'Spending Analysis',
 };
@@ -17,7 +17,7 @@ export function Navbar({ onMenuClick }) {
           <Menu size={20} />
         </button>
         <div>
-          <h1 className="text-lg font-semibold text-foreground">{pageNames[activePage] || 'Financial Overview'}</h1>
+          <h1 className="text-lg font-semibold text-foreground">{pageNames[activePage] || 'Finance Dashboard'}</h1>
         </div>
       </div>
 
