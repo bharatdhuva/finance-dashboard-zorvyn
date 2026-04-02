@@ -6,7 +6,7 @@ A role-based finance dashboard built for internal reporting and clean handoff de
 
 - Financial overview with balance trend and expense composition
 - Transaction ledger with search, sorting, editing, and CSV export
-- Insights view for month-over-month spending and top categories
+- Analysis view for month-over-month spending and top categories
 - Admin and viewer modes for controlled access behavior
 
 ## Tech stack

@@ -5,7 +5,7 @@ import { Navbar } from '@/components/Navbar';
 import { ToastProvider } from '@/components/Toast';
 import DashboardPage from '@/pages/DashboardPage';
 import TransactionsPage from '@/pages/TransactionsPage';
-import InsightsPage from '@/pages/InsightsPage';
+import AnalysisPage from '@/pages/AnalysisPage';
 
 export default function Layout() {
   const { darkMode, activePage } = useStore();
@@ -18,7 +18,7 @@ export default function Layout() {
   const renderPage = () => {
     switch (activePage) {
       case 'transactions': return <TransactionsPage />;
-      case 'insights': return <InsightsPage />;
+      case 'analysis': return <AnalysisPage />;
       default: return <DashboardPage />;
     }
   };

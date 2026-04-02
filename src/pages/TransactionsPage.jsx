@@ -59,17 +59,6 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-4">
-      <section className="rounded-2xl border border-border ambient-surface p-5 md:p-6">
-        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Ledger operations</p>
-        <div className="mt-2 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">Transaction register</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Search, sort, export, and audit every movement in one place.</p>
-          </div>
-          <p className="text-sm text-muted-foreground">Showing {filtered.length} of {transactions.length} entries</p>
-        </div>
-      </section>
-
       {/* Controls */}
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="flex flex-col sm:flex-row gap-2 flex-1 w-full sm:w-auto">

@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } fro
 import { useStore } from '@/store/useStore';
 import { formatINR, CATEGORY_COLORS } from '@/lib/format';
 
-export default function InsightsPage() {
+export default function AnalysisPage() {
   const { transactions } = useStore();
 
   const expenses = useMemo(() => transactions.filter(t => t.type === 'Expense'), [transactions]);
@@ -73,7 +73,7 @@ export default function InsightsPage() {
     ? `Your spending decreased by ${Math.abs(mom.change).toFixed(0)}% compared to last month.`
     : 'Your spending remained the same as last month.';
 
-  const insightCards = [
+  const analysisCards = [
     {
       title: 'Highest Spending',
       category: highest?.[0] || 'N/A',
@@ -111,20 +111,9 @@ export default function InsightsPage() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border ambient-surface p-5 md:p-6">
-        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Decision support</p>
-        <div className="mt-2 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">Spending and income intelligence</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Highlights crafted for monthly review meetings and budget planning.</p>
-          </div>
-          <p className="text-sm text-muted-foreground">{transactions.length} transactions analyzed</p>
-        </div>
-      </section>
-
-      {/* Insight Cards */}
+      {/* Analysis Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {insightCards.map((card, i) => (
+        {analysisCards.map((card, i) => (
           <div key={i} className="bg-card rounded-xl border border-border p-5 hover:border-primary/30 transition-colors glow-card ambient-surface">
             <div className="flex items-center gap-3 mb-3">
               <div className={`w-9 h-9 rounded-lg flex items-center justify-center bg-muted`}>

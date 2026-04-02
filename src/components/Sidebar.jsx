@@ -1,11 +1,11 @@
-import { LayoutDashboard, ArrowLeftRight, Lightbulb, Shield, Sun, Moon, ChevronDown, X } from 'lucide-react';
+import { LayoutDashboard, ArrowRightLeft, BarChart3, Shield, Sun, Moon, ChevronDown, X } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { useState } from 'react';
 
 const navItems = [
   { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
-  { id: 'transactions', label: 'Ledger', icon: ArrowLeftRight },
-  { id: 'insights', label: 'Insights', icon: Lightbulb },
+  { id: 'transactions', label: 'Transactions', icon: ArrowRightLeft },
+  { id: 'analysis', label: 'Analysis', icon: BarChart3 },
 ];
 
 export function Sidebar({ mobileOpen, onMobileClose }) {

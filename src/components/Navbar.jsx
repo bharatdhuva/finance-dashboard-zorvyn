@@ -4,16 +4,11 @@ import { useStore } from '@/store/useStore';
 const pageNames = {
   dashboard: 'Financial Overview',
   transactions: 'Transactions Ledger',
-  insights: 'Spending Insights',
+  analysis: 'Spending Analysis',
 };
 
 export function Navbar({ onMenuClick }) {
   const { activePage, selectedRole, darkMode, setDarkMode } = useStore();
-  const todayLabel = new Date().toLocaleDateString('en-IN', {
-    weekday: 'short',
-    day: '2-digit',
-    month: 'short',
-  });
 
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between h-16 px-4 md:px-6 border-b border-border bg-card/75 backdrop-blur-md">
@@ -23,7 +18,6 @@ export function Navbar({ onMenuClick }) {
         </button>
         <div>
           <h1 className="text-lg font-semibold text-foreground">{pageNames[activePage] || 'Financial Overview'}</h1>
-          <p className="text-xs text-muted-foreground">{todayLabel} • Prepared for weekly review</p>
         </div>
       </div>
 
