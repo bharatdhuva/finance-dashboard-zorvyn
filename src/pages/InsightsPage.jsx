@@ -111,10 +111,21 @@ export default function InsightsPage() {
 
   return (
     <div className="space-y-6">
+      <section className="rounded-2xl border border-border ambient-surface p-5 md:p-6">
+        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Decision support</p>
+        <div className="mt-2 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold text-foreground">Spending and income intelligence</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Highlights crafted for monthly review meetings and budget planning.</p>
+          </div>
+          <p className="text-sm text-muted-foreground">{transactions.length} transactions analyzed</p>
+        </div>
+      </section>
+
       {/* Insight Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {insightCards.map((card, i) => (
-          <div key={i} className="bg-card rounded-xl border border-border p-5 hover:border-primary/30 transition-colors glow-card">
+          <div key={i} className="bg-card rounded-xl border border-border p-5 hover:border-primary/30 transition-colors glow-card ambient-surface">
             <div className="flex items-center gap-3 mb-3">
               <div className={`w-9 h-9 rounded-lg flex items-center justify-center bg-muted`}>
                 <card.icon size={18} className={card.textColor} />
@@ -143,8 +154,8 @@ export default function InsightsPage() {
       </div>
 
       {/* Bar Chart */}
-      <div className="bg-card rounded-xl border border-border p-5">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Monthly Income vs Expenses</h3>
+      <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
+        <h3 className="text-sm font-semibold text-foreground mb-4">Monthly inflow vs outflow</h3>
         {transactions.length === 0 ? (
           <div className="h-64 flex items-center justify-center text-muted-foreground text-sm">No data available</div>
         ) : (
@@ -162,7 +173,7 @@ export default function InsightsPage() {
       </div>
 
       {/* Summary */}
-      <div className="bg-card rounded-xl border border-border p-5">
+      <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
         <p className="text-sm text-muted-foreground leading-relaxed">
           {momText} {topExpenseCategories && `${topExpenseCategories} are your top expense categories.`}
         </p>

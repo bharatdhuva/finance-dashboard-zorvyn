@@ -1,10 +1,10 @@
-import { LayoutDashboard, ArrowLeftRight, Lightbulb, Shield, Sun, Moon, ChevronDown, Menu, X } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, Lightbulb, Shield, Sun, Moon, ChevronDown, X } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { useState } from 'react';
 
 const navItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'transactions', label: 'Transactions', icon: ArrowLeftRight },
+  { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
+  { id: 'transactions', label: 'Ledger', icon: ArrowLeftRight },
   { id: 'insights', label: 'Insights', icon: Lightbulb },
 ];
 
@@ -20,16 +20,19 @@ export function Sidebar({ mobileOpen, onMobileClose }) {
   };
 
   const content = (
-    <div className="flex flex-col h-full bg-card border-r border-border">
+    <div className="flex flex-col h-full bg-card border-r border-border ambient-surface">
       {/* Logo */}
       <button
         onClick={() => { setActivePage('dashboard'); onMobileClose(); }}
         className="flex items-center gap-3 px-5 py-5 border-b border-border text-left transition-colors hover:bg-muted/40"
       >
-        <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
+        <div className="w-9 h-9 rounded-xl bg-primary/90 flex items-center justify-center shadow-sm">
           <Shield size={20} className="text-primary-foreground" />
         </div>
-        <span className="text-lg font-bold text-foreground tracking-tight">Zorvyn Finance</span>
+        <div>
+          <span className="block text-lg font-bold text-foreground tracking-tight">Zorvyn Finance</span>
+          <span className="block text-xs text-muted-foreground">Operations console</span>
+        </div>
       </button>
 
       {/* Nav */}
@@ -63,7 +66,7 @@ export function Sidebar({ mobileOpen, onMobileClose }) {
       <div className="px-3 pb-4 space-y-3 border-t border-border pt-4">
         {/* Role indicator */}
         <div className="px-3 py-1 text-xs font-medium text-muted-foreground">
-          {selectedRole === 'admin' ? '🔐 Admin Mode' : '👁 Viewer Mode'}
+          {selectedRole === 'admin' ? 'Mode: admin' : 'Mode: viewer'}
         </div>
 
         {/* Role switcher */}
@@ -98,8 +101,12 @@ export function Sidebar({ mobileOpen, onMobileClose }) {
           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         >
           {darkMode ? <Sun size={16} /> : <Moon size={16} />}
-          <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
+          <span>{darkMode ? 'Switch to Light' : 'Switch to Dark'}</span>
         </button>
+
+        <p className="px-3 text-[11px] leading-relaxed text-muted-foreground">
+          Built for handoff-ready reporting with clear, role-based controls.
+        </p>
       </div>
     </div>
   );

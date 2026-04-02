@@ -25,11 +25,15 @@ export default function Layout() {
 
   return (
     <ToastProvider>
-      <div className="flex min-h-screen bg-background">
+      <div className="relative flex min-h-screen bg-background">
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute -left-20 top-16 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute right-0 top-1/3 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+        </div>
         <Sidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
         <div className="flex-1 flex flex-col min-w-0">
           <Navbar onMenuClick={() => setMobileOpen(true)} />
-          <main className="flex-1 p-4 md:p-6 animate-fade-in" key={activePage}>
+          <main className="flex-1 p-4 md:p-6 animate-float-in" key={activePage}>
             {renderPage()}
           </main>
         </div>

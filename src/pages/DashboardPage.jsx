@@ -9,6 +9,12 @@ export default function DashboardPage() {
   const { transactions } = useStore();
   const [loading, setLoading] = useState(true);
   const [hoveredCategoryIndex, setHoveredCategoryIndex] = useState(null);
+  const todayLabel = new Date().toLocaleDateString('en-IN', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 500);
@@ -82,16 +88,27 @@ export default function DashboardPage() {
     { label: 'Total Income', value: formatINR(stats.income), icon: TrendingUp, trend: true, color: neutral ? 'text-muted-foreground' : 'text-success' },
     { label: 'Total Expenses', value: formatINR(stats.expense), icon: TrendingDown, trend: false, color: neutral ? 'text-muted-foreground' : 'text-destructive' },
     { label: 'Savings Rate', value: `${stats.savingsRate.toFixed(1)}%`, icon: PiggyBank, trend: !neutral && stats.savingsRate > 0, color: neutral ? 'text-muted-foreground' : 'text-accent' },
-  ];
+  ];1
 
   return (
     <div className="space-y-6">
+      <section className="rounded-2xl border border-border ambient-surface p-5 md:p-6">
+        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Weekly review</p>
+        <div className="mt-2 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            {/* <h2 className="text-2xl font-semibold text-foreground">Cashflow snapshot for leadership</h2> */}
+            {/* <p className="mt-1 text-sm text-muted-foreground">{todayLabel} • Auto-updated from your current ledger</p> */}
+          </div>
+          <p className="text-sm text-muted-foreground">{transactions.length} records currently tracked</p>
+        </div>
+      </section>  
+
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {loading
           ? Array.from({ length: 4 }).map((_, i) => <SkeletonBox key={i} className="h-28" />)
           : cards.map((card, i) => (
-            <div key={i} className="bg-card rounded-xl border border-border p-5 glow-card hover:border-primary/30 transition-colors">
+            <div key={i} className="bg-card rounded-xl border border-border p-5 glow-card hover:border-primary/30 transition-colors ambient-surface">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-sm text-muted-foreground font-medium">{card.label}</span>
                 <card.icon size={18} className={card.color} />
@@ -112,8 +129,8 @@ export default function DashboardPage() {
         ) : (
           <>
             {/* Balance Trend */}
-            <div className="bg-card rounded-xl border border-border p-5">
-              <h3 className="text-sm font-semibold text-foreground mb-4">Balance Trend</h3>
+            <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Net worth trajectory</h3>
               {noData ? (
                 <div className="h-56 flex items-center justify-center text-muted-foreground text-sm">No data available</div>
               ) : (
@@ -135,8 +152,8 @@ export default function DashboardPage() {
             </div>
 
             {/* Spending Breakdown */}
-            <div className="bg-card rounded-xl border border-border p-5">
-              <h3 className="text-sm font-semibold text-foreground mb-4">Spending Breakdown</h3>
+            <div className="bg-card rounded-xl border border-border p-5 ambient-surface">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Expense composition</h3>
               {categoryData.length === 0 ? (
                 <div className="h-56 flex items-center justify-center text-muted-foreground text-sm">No data available</div>
               ) : (

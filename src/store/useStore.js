@@ -56,7 +56,7 @@ export const useStore = create(
     (set) => ({
       transactions: remapTransactionDates(MOCK),
       selectedRole: 'viewer',
-      darkMode: true,
+      darkMode: false,
       activePage: 'dashboard',
       filters: { search: '', type: 'all', sortBy: 'date', sortDir: 'desc' },
       setRole: (role) => set({ selectedRole: role }),

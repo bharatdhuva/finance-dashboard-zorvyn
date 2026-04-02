@@ -59,6 +59,17 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-4">
+      <section className="rounded-2xl border border-border ambient-surface p-5 md:p-6">
+        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Ledger operations</p>
+        <div className="mt-2 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold text-foreground">Transaction register</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Search, sort, export, and audit every movement in one place.</p>
+          </div>
+          <p className="text-sm text-muted-foreground">Showing {filtered.length} of {transactions.length} entries</p>
+        </div>
+      </section>
+
       {/* Controls */}
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="flex flex-col sm:flex-row gap-2 flex-1 w-full sm:w-auto">
@@ -66,7 +77,7 @@ export default function TransactionsPage() {
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search transactions..."
+              placeholder="Search by category or description"
               value={filters.search}
               onChange={(e) => setFilter({ search: e.target.value })}
               className="w-full pl-9 pr-3 py-2 rounded-lg bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:outline-none transition-colors"
@@ -77,7 +88,7 @@ export default function TransactionsPage() {
             onChange={(e) => setFilter({ type: e.target.value })}
             className="px-3 py-2 rounded-lg bg-card border border-border text-sm text-foreground focus:ring-2 focus:ring-ring focus:outline-none"
           >
-            <option value="all">All</option>
+            <option value="all">All types</option>
             <option value="Income">Income</option>
             <option value="Expense">Expense</option>
           </select>
@@ -96,7 +107,7 @@ export default function TransactionsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-card rounded-xl border border-border overflow-x-auto">
+      <div className="bg-card rounded-xl border border-border overflow-x-auto ambient-surface">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-left">
@@ -114,8 +125,8 @@ export default function TransactionsPage() {
                 <td colSpan={isAdmin ? 6 : 5} className="py-16 text-center">
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <PackageOpen size={40} strokeWidth={1.5} />
-                    <p className="text-sm font-medium">No transactions found</p>
-                    <p className="text-xs">Try adjusting your search or filters</p>
+                    <p className="text-sm font-medium">No matching transactions</p>
+                    <p className="text-xs">Adjust filters or clear search to see full ledger</p>
                   </div>
                 </td>
               </tr>
