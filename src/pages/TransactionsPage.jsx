@@ -13,6 +13,15 @@ export default function TransactionsPage() {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const isAdmin = selectedRole === 'admin';
 
+  const toIsoDate = (value) => {
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toISOString().slice(0, 10);
+  };
+
+  const csvCell = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+
   const filtered = useMemo(() => {
     let result = [...transactions];
     if (filters.search) {
@@ -32,8 +41,16 @@ export default function TransactionsPage() {
 
   const handleExportCSV = () => {
     const header = 'Date,Description,Category,Type,Amount\n';
-    const rows = filtered.map(t => `${t.date},"${t.description}",${t.category},${t.type},${t.amount}`).join('\n');
-    const blob = new Blob([header + rows], { type: 'text/csv' });
+    const rows = filtered
+      .map((t) => [
+        csvCell(toIsoDate(t.date)),
+        csvCell(t.description),
+        csvCell(t.category),
+        csvCell(t.type),
+        csvCell(t.amount),
+      ].join(','))
+      .join('\n');
+    const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
