@@ -13,7 +13,6 @@ const remapLegacyDate = (date) => {
 
 const remapTransactionDates = (transactions) =>
   transactions.map((tx) => ({ ...tx, date: remapLegacyDate(tx.date) }));
-
 const MOCK = [
   {
     id: 'tx-20260403-01',
