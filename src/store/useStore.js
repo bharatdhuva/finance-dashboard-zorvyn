@@ -18,7 +18,7 @@ const MOCK = [
   {
     id: 'tx-20260403-01',
     date: '2026-04-03',
-    description: 'Movie(Dhurandhar)',
+    description: 'Movie',
     category: 'Entertainment',
     type: 'Expense',
     amount: 899,
