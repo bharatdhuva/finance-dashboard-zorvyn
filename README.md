@@ -64,7 +64,7 @@ npm run test
 
 ## View Live Deployment
 
-[![View Live Deployment](https://img.shields.io/badge/View-Live%20Deployment-22c55e?style=for-the-badge)](https://finance-dashboard-zorvyn-6dqp.vercel.app/)
+[![View Live Deployment](https://img.shields.io/badge/View-Live%20Deployment-22c55e?style=for-the-badge)](https://finance-dashboard-zorvyn-6dqp-hye3v05rz.vercel.app/)
 
 ---
 
