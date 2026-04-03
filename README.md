@@ -89,11 +89,11 @@ npm run test
 
 ## Final Note
 
-While I leveraged AI tools to speed up development and improve quality, I have complete ownership and deep understanding of every component, logic, and design decision in this project.
-From role-based access to custom toasts and edge-case handling, I can explain and modify any part of this codebase confidently.
+This project demonstrates clean UI design, proper state management, role-based behavior simulation, and thoughtful UX decisions while strictly following the assignment requirements.
 
-Also booking my tickets to **Zorvyn** Frontend Intern. Hope so.😁
+I have complete ownership of the codebase and can confidently explain the architecture, component structure, state flow, and every design decision made.
 
-Thank you for your time and consideration.
+Thank you for reviewing my submission.
+
 **Bharat**  
-React Developer Intern Candidate
+React Developer | Frontend Intern Candidate
