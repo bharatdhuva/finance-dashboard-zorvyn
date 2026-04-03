@@ -11,6 +11,7 @@ export function formatINR(amount) {
   let remaining = str.slice(0, -3);
   const groups = [];
   
+  // Indian numbering groups digits as 12,34,56,789 (first group 3 digits, then 2).
   while (remaining.length > 2) {
     groups.unshift(remaining.slice(-2));
     remaining = remaining.slice(0, -2);

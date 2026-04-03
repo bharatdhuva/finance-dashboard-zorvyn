@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { TrendingUp, TrendingDown, ShoppingBag, Wallet } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useStore } from '@/store/useStore';
-import { formatINR, CATEGORY_COLORS } from '@/lib/format';
+import { formatINR } from '@/lib/format';
 
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -30,7 +30,7 @@ export default function AnalysisPage() {
   const lowest = categoryTotals[categoryTotals.length - 1];
   const topIncome = incomeCategoryTotals[0];
 
-  // Dynamically determine the latest month from data, then compare with previous
+  // Compare latest full month in the dataset against the month right before it.
   const mom = useMemo(() => {
     if (transactions.length === 0) return { current: 0, previous: 0, change: 0, currentLabel: '', previousLabel: '' };
 
@@ -65,7 +65,7 @@ export default function AnalysisPage() {
     };
   }, [transactions, expenses]);
 
-  // Dynamically build last 6 months from the latest transaction date
+  // Build a rolling 6-month series based on the latest transaction date.
   const monthlyChart = useMemo(() => {
     if (transactions.length === 0) return [];
 

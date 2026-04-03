@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 
 const generateId = () => Math.random().toString(36).slice(2, 10);
 
+// Legacy datasets used 2024 placeholder dates. Remap them once during hydration.
 const remapLegacyDate = (date) => {
   if (date.startsWith('2024-10-')) return date.replace('2024-10-', '2026-01-');
   if (date.startsWith('2024-11-')) return date.replace('2024-11-', '2026-02-');
@@ -137,6 +138,7 @@ export const useStore = create(
     {
       name: 'zorvyn-finance-store',
       version: 2,
+      // Persist only user-controlled state; derived UI state should reset per session.
       partialize: (state) => ({
         transactions: state.transactions,
         selectedRole: state.selectedRole,

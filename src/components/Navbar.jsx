@@ -3,7 +3,7 @@ import { useStore } from '@/store/useStore';
 
 const pageNames = {
   dashboard: 'Finance Dashboard',
-  transactions: 'Transactions Ledger',
+  transactions: 'Transaction History',
   analysis: 'Spending Analysis',
 };
 

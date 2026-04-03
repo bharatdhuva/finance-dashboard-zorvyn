@@ -22,6 +22,9 @@ export default function TransactionsPage() {
     return d.toISOString().slice(0, 10);
   };
 
+  const formatDisplayDate = (value) =>
+    new Date(value).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
   const csvCell = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
 
   const filtered = useMemo(() => {
@@ -33,6 +36,7 @@ export default function TransactionsPage() {
     if (filters.type !== 'all') {
       result = result.filter(t => t.type === filters.type);
     }
+    // Keep sorting deterministic so table rows do not jump unexpectedly between renders.
     result.sort((a, b) => {
       const dir = filters.sortDir === 'asc' ? 1 : -1;
       if (filters.sortBy === 'date') return dir * (new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -60,13 +64,14 @@ export default function TransactionsPage() {
     const header = 'Date,Description,Category,Type,Amount\n';
     const rows = filtered
       .map((t) => {
+        // Excel keeps leading zeros and avoids date auto-conversion with this syntax.
         const excelDateText = `="${toIsoDate(t.date)}"`;
         return [
           excelDateText,
-        csvCell(t.description),
-        csvCell(t.category),
-        csvCell(t.type),
-        csvCell(t.amount),
+          csvCell(t.description),
+          csvCell(t.category),
+          csvCell(t.type),
+          csvCell(t.amount),
         ].join(',');
       })
       .join('\n');
@@ -210,7 +215,7 @@ export default function TransactionsPage() {
                       />
                     </td>
                   )}
-                  <td className="px-4 py-3 text-foreground whitespace-nowrap">{new Date(tx.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                  <td className="px-4 py-3 text-foreground whitespace-nowrap">{formatDisplayDate(tx.date)}</td>
                   <td className="px-4 py-3 text-foreground">{tx.description}</td>
                   <td className="px-4 py-3">
                     <span className={`text-xs font-medium px-2 py-1 rounded-full ${CATEGORY_BG_CLASSES[tx.category] || 'bg-muted text-muted-foreground'}`}>

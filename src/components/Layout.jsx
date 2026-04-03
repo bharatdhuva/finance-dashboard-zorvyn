@@ -7,6 +7,12 @@ import DashboardPage from '@/pages/DashboardPage';
 import TransactionsPage from '@/pages/TransactionsPage';
 import AnalysisPage from '@/pages/AnalysisPage';
 
+const PAGE_TITLES = {
+  dashboard: 'Finance Dashboard',
+  transactions: 'Transaction History',
+  analysis: 'Spending Analysis',
+};
+
 export default function Layout() {
   const { darkMode, activePage } = useStore();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -16,12 +22,7 @@ export default function Layout() {
   }, [darkMode]);
 
   useEffect(() => {
-    const titles = {
-      dashboard: 'Finance Dashboard',
-      transactions: 'Transactions Ledger',
-      analysis: 'Spending Analysis',
-    };
-    document.title = titles[activePage] || 'Zorvyn Finance Dashboard';
+    document.title = PAGE_TITLES[activePage] || 'Zorvyn Finance Dashboard';
   }, [activePage]);
 
   const renderPage = () => {

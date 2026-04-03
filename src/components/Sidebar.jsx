@@ -1,6 +1,7 @@
-import { LayoutDashboard, ArrowRightLeft, BarChart3, Shield, Sun, Moon, ChevronDown, X } from 'lucide-react';
+import { LayoutDashboard, ArrowRightLeft, BarChart3, Sun, Moon, ChevronDown, X } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { useState } from 'react';
+import zorvynLogo from '../../assets/zorvynfulllogolight.png';
 
 const navItems = [
   { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
@@ -24,14 +25,10 @@ export function Sidebar({ mobileOpen, onMobileClose }) {
       {/* Logo */}
       <button
         onClick={() => { setActivePage('dashboard'); onMobileClose(); }}
-        className="flex items-center gap-3 px-5 py-5 border-b border-border text-left transition-colors hover:bg-muted/40"
+        className="flex items-center px-5 py-5 border-b border-border transition-colors hover:bg-muted/40"
       >
-        <div className="w-9 h-9 rounded-xl bg-primary/90 flex items-center justify-center shadow-sm">
-          <Shield size={20} className="text-primary-foreground" />
-        </div>
-        <div>
-          <span className="block text-lg font-bold text-foreground tracking-tight">Zorvyn Finance</span>
-          <span className="block text-xs text-muted-foreground">Operations console</span>
+        <div className="w-full flex items-center justify-start pl-1">
+          <img src={zorvynLogo} alt="Zorvyn Fintech" className="h-10 w-auto" />
         </div>
       </button>
 

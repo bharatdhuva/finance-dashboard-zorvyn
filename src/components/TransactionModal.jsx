@@ -17,7 +17,6 @@ export default function TransactionModal({ transaction, onClose }) {
     type: transaction?.type || 'Expense',
     amount: transaction?.amount?.toString() || '',
   });
-  const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
   const validate = () => {
@@ -32,7 +31,6 @@ export default function TransactionModal({ transaction, onClose }) {
     ev.preventDefault();
     setSubmitted(true);
     const e = validate();
-    setErrors(e);
     if (Object.keys(e).length > 0) return;
 
     const data = {
@@ -53,7 +51,8 @@ export default function TransactionModal({ transaction, onClose }) {
     onClose();
   };
 
-  const errs = submitted ? validate() : errors;
+  // Show validation only after first submit attempt.
+  const errs = submitted ? validate() : {};
   const isValid = Object.keys(validate()).length === 0;
 
   return (
