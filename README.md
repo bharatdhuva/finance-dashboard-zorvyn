@@ -89,7 +89,6 @@ npm run test
 
 ## Final Note
 
-<<<<<<< HEAD
 This project demonstrates clean UI design, proper state management, role-based behavior simulation, and thoughtful UX decisions while strictly following the assignment requirements.
 
 I have complete ownership of the codebase and can confidently explain the architecture, component structure, state flow, and every design decision made.
@@ -98,13 +97,3 @@ Thank you for reviewing my submission.
 
 **Bharat**  
 React Developer | Frontend Intern Candidate
-=======
-While I leveraged AI tools to speed up development and improve quality, I have complete ownership and deep understanding of every component, logic, and design decision in this project.
-From role-based access to custom toasts and edge-case handling, I can explain and modify any part of this codebase confidently.
-
-Also booking my tickets to **Zorvyn** Frontend Intern. Hope so.😁
-
-Thank you for your time and consideration.
-**Bharat**  
-React Developer Intern Candidate
->>>>>>> ee8d02f01606826124e70c024eae0ffccaba65f2
