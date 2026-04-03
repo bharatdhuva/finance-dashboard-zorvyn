@@ -70,7 +70,7 @@ npm run test
 
 ## Demo Preview
 
-![Zorvyn Finance Dashboard Demo](./assets/Demo-Zorvyn-GIF.gif)
+![Zorvyn Finance Dashboard Demo](./assets/Demo_GIF_1.gif)
 
 ---
 
