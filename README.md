@@ -1,191 +1,99 @@
 <div align="center">
-  <h1>Task Manager API and Dashboard</h1>
-  <p><strong>Node.js Interview Assignment | PR: NODEJSIIP-01909</strong></p>
+  <h1>Zorvyn Finance Dashboard</h1>
+  <p><strong>Clean � Modern � Role-Based</strong> Finance Dashboard</p>
 
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
-  <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white" alt="Mongoose" />
-  <img src="https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white" alt="Jest" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind" />
+  <img src="https://img.shields.io/badge/Zustand-FF8A00?style=for-the-badge" alt="Zustand" />
+  <img src="https://img.shields.io/badge/Recharts-00C4B4?style=for-the-badge" alt="Recharts" />
 </div>
 
 ---
 
-## About The Project
+## About the Project
 
-This project is a Node.js internship practical submission for a Task Management application.
+Zorvyn Finance Dashboard is a frontend-only finance dashboard built for the Finance Dashboard UI assignment.
 
-It includes:
-
-- Full task CRUD flow
-- MongoDB persistence
-- Input validation and consistent API error responses
-- Browser-based UI for quick manual review
-- Unit and integration-style API tests
+It focuses on clean UI, role-based interactions (Admin/Viewer), and clear financial insights using mock data.
 
 ---
 
-## Live Deployment
+## Key Features
 
-[![Live App](https://img.shields.io/badge/View-Live%20Deployment-22c55e?style=for-the-badge)](https://node-js-assignment-chaintech-network-1.onrender.com/)
-
----
-
-## Core Features
-
-- Create tasks with title and description
-- List all tasks
-- Edit task details
-- Mark a task as completed
-- Prevent duplicate completion on already completed tasks
-- Delete tasks
-- Optional due date and category support
-- Clean JSON error handling
+- Summary cards: Balance, Income, Expense, Savings Rate
+- Monthly Spending Graph + Weekly Expense Tracker
+- Expense composition donut chart
+- Transactions table with search, filter, sort, CSV export
+- Admin actions: Add, Edit, Delete, Bulk Delete
+- Analysis: top/lowest spend, MoM comparison, top income source
+- Dark mode, responsive design, skeleton loaders, toast notifications
+- Zustand + localStorage persistence
 
 ---
 
 ## Tech Stack
 
-- Node.js
-- Express.js
-- MongoDB Atlas
-- Mongoose
-- Jest + Supertest
+- React 18 + Vite
+- Tailwind CSS
+- Zustand (persist middleware)
+- Recharts
+- Lucide React
 
 ---
 
 ## Run Locally
 
-1. Install dependencies:
-
 ```bash
 npm install
-```
-
-2. Create a local environment file:
-
-```env
-MONGODB_URI=mongodb://127.0.0.1:27017/task-manager-assignment
-PORT=3000
-```
-
-3. Start the app:
-
-```bash
 npm run dev
 ```
 
-4. Open in browser:
-
-```text
-http://localhost:3000
-```
+If default port is busy, Vite auto-switches to another port.
 
 ---
 
-## Test Commands
+## Build & Test
 
 ```bash
-npm test
+npm run build
+npm run test
 ```
 
 ---
 
-## API Endpoints
+## View Live Deployment
 
-- `GET /api/tasks` : Get all tasks
-- `POST /api/tasks` : Create task
-- `PUT /api/tasks/:id` : Update task
-- `PATCH /api/tasks/:id/complete` : Mark task completed
-- `DELETE /api/tasks/:id` : Delete task
-
-### Example Request Body
-
-```json
-{
-  "title": "Finish assignment",
-  "description": "Implement CRUD and validation",
-  "dueDate": "2026-04-10",
-  "category": "Interview"
-}
-```
+[![View Live Deployment](https://img.shields.io/badge/View-Live%20Deployment-22c55e?style=for-the-badge)](https://finance-dashboard-zorvyn-6dqp.vercel.app/)
 
 ---
 
-## Project Structure
+## Demo Preview
 
-```text
-src/
-  app.js                    Express app setup
-  server.js                 Server bootstrap
-  db/
-    database.js             MongoDB connection setup
-    taskRepository.js       Task data operations
-  models/
-    taskModel.js            Mongoose task schema
-  middleware/
-    errorHandler.js         Central error responses
-    notFoundHandler.js      Route not found middleware
-  routes/
-    taskRoutes.js           Task routes and validation
-  public/
-    index.html              Browser UI
-    styles.css              UI styles
-    app.js                  Frontend API logic
-tests/
-  taskRoutes.test.js        API test coverage
-```
+![Zorvyn Finance Dashboard Demo](./assets/Demo_GIF_1.gif)
 
 ---
 
 ## Assignment Requirements Coverage
 
-| Requirement | Status |
-|-------------|--------|
-| Create task with title and description | Done |
-| View list of all tasks | Done |
-| Mark task as completed | Done |
-| Edit task details | Done |
-| Delete task | Done |
-| MySQL/MongoDB persistence requirement | Done (MongoDB) |
-| Title required validation | Done |
-| Prevent duplicate completion | Done |
-| Graceful error messages | Done |
-| Due date (bonus) | Done |
-| Category (bonus) | Done |
-| Unit/API tests (bonus) | Done |
-
----
-
-## Key Engineering Decisions
-
-- MongoDB + Mongoose used to satisfy assignment persistence criteria with schema-based modeling.
-- Repository layer used to keep route handlers focused on request validation and response flow.
-- Error middleware returns predictable JSON structure for easier debugging and frontend integration.
-- Frontend kept lightweight to allow non-technical reviewers to test functionality quickly.
-
----
-
-## Deployment Notes
-
-- Deployment target: Render
-- Database: MongoDB Atlas
-- Render environment variable required:
-
-```env
-MONGODB_URI=<your-atlas-uri>
-```
-
-If SRV DNS issues occur on local network, use standard non-SRV MongoDB URI format.
-
----
+| Requirement                                 | Status |
+|---------------------------------------------|--------|
+| Summary Cards + Time-based Charts           | ✅ Done |
+| Categorical Visualization (Donut Chart)     | ✅ Done |
+| Transactions (Search, Filter, Sort)         | ✅ Done |
+| Role-based UI (Admin / Viewer)              | ✅ Done |
+| Insights Section                            | ✅ Done |
+| State Management with Persistence           | ✅ Done |
+| Fully Responsive Design                     | ✅ Done |
+| CSV Export + Custom Toast                   | ✅ Done |
 
 ## Final Note
 
-This project is built specifically against the Node.js internship practical guide and evaluation criteria.
+This project demonstrates clean UI design, proper state management, role-based behavior simulation, and thoughtful UX decisions while strictly following the assignment requirements.
 
-I can explain architecture, route flow, validation logic, and deployment setup end-to-end.
+I have complete ownership of the codebase and can confidently explain the architecture, component structure, state flow, and every design decision made.
 
-Thanks for reviewing this submission.
+Thank you for reviewing my submission.
 
-**Bharat**
+**Bharat**  
+React Developer | Frontend Intern Candidate
